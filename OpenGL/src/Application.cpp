@@ -13,6 +13,9 @@
 #include "Shader.h"
 #include "Texture.h"
 
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+
 
 int main(void)
 {
@@ -72,13 +75,17 @@ int main(void)
 
 		IndexBuffer ib(indices, 6);
 
-		Shader shader("res\\shaders\\Basic.shader");
-		shader.Bind();
-		shader.SetUnfirom4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
+		glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
 
-		Texture texture("res\\textures\\texture .png");
+
+		Shader shader("res/shaders/Basic.shader");
+		shader.Bind();
+		shader.SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
+		shader.SetUniformMat4f("u_MVP", proj);
+
+		Texture texture("res/textures/texture.png");
 		texture.Bind();
-		shader.SetUnfirom1i("u_Texture", 0);
+		shader.SetUniform1i("u_Texture", 0);
 
 		va.Unbind();
 		vb.Unbind();
@@ -96,7 +103,7 @@ int main(void)
 			renderer.Clear();
 
 			shader.Bind();
-			shader.SetUnfirom4f("u_Color", r, 0.3f, 0.8f, 1.0f);
+			shader.SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
 
 			renderer.Draw(va, ib, shader);
 
